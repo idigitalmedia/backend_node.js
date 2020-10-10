@@ -3,8 +3,8 @@
     "database": {
         "host": "localhost",
         "port": 3306,
-        "user": "newuser1",
-        "password": "newuser1password",
+        "user": "root",
+        "password": "",
         "database": "spreadpay"
     },
     "secret": "THIS IS USED TO SIGN AND VERIFY JWT TOKENS, REPLACE IT WITH YOUR OWN SECRET, IT CAN BE ANY STRING"

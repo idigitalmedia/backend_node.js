@@ -24,7 +24,6 @@ module.exports = {
 async function authenticate({ username, password }) {
     console.log("here authenticate", password);
     const user = await db.User.scope('withHash').findOne({ where: { username } });
-    console.log("userhash------------------------------------", user.hash);
     if (!user || !(await bcrypt.compare(password, user.hash)))
         throw 'Username or password is incorrect';
 
@@ -150,7 +149,7 @@ async function forgot_password(req, res) {
             // console.log(url, secret, token, emailTemplate)
             const info = await sgMail.send(emailTemplate);
             // const info = await transporter.sendMail(emailTemplate);
-            console.log("email sent", info.response);
+            console.log("email sent", emailTemplate);
             return res.status(200).send("Email sent");
         } catch (err) {
             console.log(err);
