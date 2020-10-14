@@ -1,13 +1,10 @@
 ﻿const express = require('express');
 const router = express.Router();
-var app = express();
 const Joi = require('joi');
 const validateRequest = require('_middleware/validate-request');
 const authorize = require('_middleware/authorize')
 const userService = require('./user.service');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const db = require('_helpers/db');
+const tfaservice = require('./tfaservice');
 
 // routes
 router.post('/authenticate', authenticateSchema, authenticate); 
@@ -19,6 +16,10 @@ router.put('/:id', authorize(), updateSchema, update);
 router.delete('/:id', authorize(), _delete);
 router.post('/auth/forgot-password/:username', userService.forgot_password)
 router.post('/auth/reset-password/:id/:token', userService.reset_password)
+router.post('/tfa/setup/:uname', tfaservice.setup)
+router.get('/tfa/setup/:uname', tfaservice.get_tfa)
+router.delete('/tfa/setup', tfaservice._delete)
+router.post('/tfa/verify', tfaservice.verify)
 
 module.exports = router;
 

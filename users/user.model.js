@@ -8,6 +8,11 @@ function model(sequelize) {
         lastName: { type: DataTypes.STRING, allowNull: false },
         username: { type: DataTypes.STRING, allowNull: false },
         hash: { type: DataTypes.STRING, allowNull: false },
+        secret:{ type: DataTypes.STRING, allowNull: true },
+        tempSecret:{ type: DataTypes.STRING, allowNull: true },
+        dataURL:{ type: DataTypes.STRING, allowNull: true },
+        tfaURL:{ type: DataTypes.STRING, allowNull: true },
+        authcode:{ type: DataTypes.STRING, allowNull: true },
     };
 
     const options = {

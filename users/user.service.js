@@ -28,8 +28,36 @@ async function authenticate({ username, password }) {
         throw 'Username or password is incorrect';
 
     // authentication successful
+    
     const token = jwt.sign({ sub: user.id }, config.secret, { expiresIn: '7d' });
+    // tfa_authenticate()
     return { ...omitHash(user.get()), token };
+}
+
+async function tfa_authenticate(req, res) {
+    if (!req.headers['x-tfa']) {
+        console.log(`WARNING: Login was partial without TFA header`);
+
+        return res.send({
+            "status": 206,
+            "message": "Please enter the Auth Code"
+        });
+    }
+    if (isVerified) {
+        console.log(`DEBUG: Login with TFA is verified to be successful`);
+
+        return res.send({
+            "status": 200,
+            "message": "success"
+        });
+    } else {
+        console.log(`ERROR: Invalid AUTH code`);
+
+        return res.send({
+            "status": 206,
+            "message": "Invalid Auth Code"
+        });
+    }
 }
 
 async function getAll() {
@@ -189,7 +217,7 @@ async function reset_password(req, res) {
     //Hash new password and store in database
     // const salt = await bcrypt.genSalt(10);
     new_password = await bcrypt.hash(password, 10);
-    user = await db.User.update({hash : new_password}, {where: {id}})
+    user = await db.User.update({ hash: new_password }, { where: { id } })
     console.log("user.password", new_password)
     return res.status(200).send("Password Reset Success!");
 }
