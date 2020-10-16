@@ -16,6 +16,7 @@ router.put('/:id', authorize(), updateSchema, update);
 router.delete('/:id', authorize(), _delete);
 router.post('/auth/forgot-password/:username', userService.forgot_password)
 router.post('/auth/reset-password/:id/:token', userService.reset_password)
+router.put('/', authorize(), updateSchema, update_tfa)
 router.post('/tfa/setup/:uname', tfaservice.setup)
 router.get('/tfa/setup/:uname', tfaservice.get_tfa)
 router.delete('/tfa/setup', tfaservice._delete)
@@ -74,13 +75,20 @@ function updateSchema(req, res, next) {
         firstName: Joi.string().empty(''),
         lastName: Joi.string().empty(''),
         username: Joi.string().empty(''),
-        password: Joi.string().min(6).empty('')
+        password: Joi.string().min(6).empty(''),
+        tfa_allow: Joi.boolean()
     });
     validateRequest(req, next, schema);
 }
 
 function update(req, res, next) {
     userService.update(req.params.id, req.body)
+        .then(user => res.json(user))
+        .catch(next);
+}
+
+function update_tfa(req, res, next) {
+    userService.update_tfa(req.body)
         .then(user => res.json(user))
         .catch(next);
 }

@@ -19,6 +19,7 @@ module.exports = {
     delete: _delete,
     forgot_password,
     reset_password,
+    update_tfa
 };
 
 async function authenticate({ username, password }) {
@@ -73,12 +74,12 @@ async function create(params) {
     if (await db.User.findOne({ where: { username: params.username } })) {
         throw 'Username "' + params.username + '" is already taken';
     }
-
+    let tfa_allow = false
     // hash password
     if (params.password) {
         params.hash = await bcrypt.hash(params.password, 10);
     }
-
+    console.log("params-->", params)
     // save user
     await db.User.create(params);
 }
@@ -97,6 +98,17 @@ async function update(id, params) {
         params.hash = await bcrypt.hash(params.password, 10);
     }
 
+    // copy params to user and save
+    Object.assign(user, params);
+    await user.save();
+
+    return omitHash(user.get());
+}
+
+async function update_tfa(params) {
+    const user = await db.User.findAll();
+    console.log("params tfa", params);
+    console.log("users", user)
     // copy params to user and save
     Object.assign(user, params);
     await user.save();

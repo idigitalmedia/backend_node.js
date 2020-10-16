@@ -13,6 +13,7 @@ function model(sequelize) {
         dataURL:{ type: DataTypes.STRING, allowNull: true },
         tfaURL:{ type: DataTypes.STRING, allowNull: true },
         authcode:{ type: DataTypes.STRING, allowNull: true },
+        tfa_allow: {type: DataTypes.BOOLEAN},
     };
 
     const options = {
