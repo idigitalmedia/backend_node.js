@@ -19,8 +19,17 @@ module.exports = {
     delete: _delete,
     forgot_password,
     reset_password,
-    update_tfa
+    update_tfa,
+    update_alltfa_false,
+    update_alltfa_true,
+    pinSave,
 };
+async function pinSave(req, res) {
+    const pincode = req.body.pincode;
+    const username = req.body.email;
+    await db.User.update({ pinCode: pincode }, { where: { username } })
+    return res.status(200).send("success")
+}
 
 async function authenticate({ username, password }) {
     console.log("here authenticate", password);
@@ -29,7 +38,7 @@ async function authenticate({ username, password }) {
         throw 'Username or password is incorrect';
 
     // authentication successful
-    
+
     const token = jwt.sign({ sub: user.id }, config.secret, { expiresIn: '7d' });
     // tfa_authenticate()
     return { ...omitHash(user.get()), token };
@@ -105,15 +114,18 @@ async function update(id, params) {
     return omitHash(user.get());
 }
 
-async function update_tfa(params) {
-    const user = await db.User.findAll();
-    console.log("params tfa", params);
-    console.log("users", user)
-    // copy params to user and save
-    Object.assign(user, params);
-    await user.save();
+async function update_tfa(req, res) {
+    const username = req.body.email;
+    const user = await db.User.update({ tfa_allow });
+}
 
-    return omitHash(user.get());
+async function update_alltfa_false(req, res) {
+    await db.User.update({ tfa_allow: false }, { where: { tfa_allow: true } });
+    return res.status(200).send('success')
+}
+async function update_alltfa_true(req, res) {
+    await db.User.update({ tfa_allow: true }, { where: { tfa_allow: false } });
+    return res.status(200).send('success')
 }
 
 async function _delete(id) {

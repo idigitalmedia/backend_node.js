@@ -14,6 +14,7 @@ function model(sequelize) {
         tfaURL:{ type: DataTypes.STRING, allowNull: true },
         authcode:{ type: DataTypes.STRING, allowNull: true },
         tfa_allow: {type: DataTypes.BOOLEAN},
+        pinCode: {type: DataTypes.INTEGER},
     };
 
     const options = {

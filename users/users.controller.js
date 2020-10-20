@@ -14,13 +14,16 @@ router.get('/current', authorize(), getCurrent);
 router.get('/:id', authorize(), getById);
 router.put('/:id', authorize(), updateSchema, update);
 router.delete('/:id', authorize(), _delete);
-router.post('/auth/forgot-password/:username', userService.forgot_password)
-router.post('/auth/reset-password/:id/:token', userService.reset_password)
-router.put('/', authorize(), updateSchema, update_tfa)
-router.post('/tfa/setup/:uname', tfaservice.setup)
-router.get('/tfa/setup/:uname', tfaservice.get_tfa)
-router.delete('/tfa/setup', tfaservice._delete)
-router.post('/tfa/verify', tfaservice.verify)
+router.post('/auth/forgot-password/:username', userService.forgot_password);
+router.post('/auth/reset-password/:id/:token', userService.reset_password);
+router.post('/tfa/setup/:uname', tfaservice.setup);
+router.get('/tfa/setup/:uname', tfaservice.get_tfa);
+router.delete('/tfa/setup', tfaservice._delete);
+router.post('/tfa/verify', tfaservice.verify);
+router.post('/setPincode', userService.pinSave);
+router.post('update_tfa', userService.update_tfa);
+router.post('/update_alltfa_false', userService.update_alltfa_false);
+router.post('/update_alltfa_true', userService.update_alltfa_true);
 
 module.exports = router;
 
@@ -76,7 +79,8 @@ function updateSchema(req, res, next) {
         lastName: Joi.string().empty(''),
         username: Joi.string().empty(''),
         password: Joi.string().min(6).empty(''),
-        tfa_allow: Joi.boolean()
+        tfa_allow: Joi.boolean(),
+        pinCode: Joi.number(),
     });
     validateRequest(req, next, schema);
 }
