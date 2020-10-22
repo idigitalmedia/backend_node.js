@@ -24,6 +24,10 @@ router.post('/setPincode', userService.pinSave);
 router.post('update_tfa', userService.update_tfa);
 router.post('/update_alltfa_false', userService.update_alltfa_false);
 router.post('/update_alltfa_true', userService.update_alltfa_true);
+router.post('/update_alletfa_false', userService.update_alletfa_false);
+router.post('/update_alletfa_true', userService.update_alletfa_true);
+router.post('/send-code/:username', userService.sendCode);
+router.post('/verify-code', userService.verifyCode);
 
 module.exports = router;
 
@@ -80,6 +84,7 @@ function updateSchema(req, res, next) {
         username: Joi.string().empty(''),
         password: Joi.string().min(6).empty(''),
         tfa_allow: Joi.boolean(),
+        etfa_allow: Joi.boolean(),
         pinCode: Joi.number(),
     });
     validateRequest(req, next, schema);

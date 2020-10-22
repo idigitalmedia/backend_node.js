@@ -8,7 +8,6 @@ const PasswordComplexity = require("joi-password-complexity");
 const _ = require("lodash");
 const nodemailer = require("nodemailer");
 const sgMail = require("@sendgrid/mail");
-sgMail.setApiKey("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");
 
 module.exports = {
     authenticate,
@@ -22,8 +21,52 @@ module.exports = {
     update_tfa,
     update_alltfa_false,
     update_alltfa_true,
+    update_alletfa_false,
+    update_alletfa_true,
     pinSave,
+    sendCode,
+    verifyCode
 };
+let r;
+async function sendCode(req, res) {
+    let username = req.params.username
+    r = Math.random().toString(36).substring(7);
+    console.log("random", r);
+    const emailTemplate = {
+        subject: "Please confirm your Email account",
+        html: `
+            <p>Hello ${username},</p>
+            <p>Please confirm below code to verify your email</p>
+            <div>
+            <strong>${r}</strong>
+            </div>`,
+        from: "system@share2riches.com",
+        to: username
+    };
+
+    const sendEmail = async () => {
+        try {
+            console.log('email template', emailTemplate)
+            const info = await sgMail.send(emailTemplate);
+            // const info = await transporter.sendMail(emailTemplate);
+            console.log("email sent", emailTemplate);
+            return res.status(200).send("Email sent");
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send("Email sending error");
+        }
+    };
+    sendEmail()
+}
+async function verifyCode(req, res) {
+    const email = req.body.username
+    const verifycode = req.body.verifycode;
+    console.log('verifycode, randomeocode', verifycode, r, req.body)
+    if (verifycode === r) {
+        return res.status(200).send('success')
+    }
+    return res.status(400).send('code is invalid')
+}
 async function pinSave(req, res) {
     const pincode = req.body.pincode;
     const username = req.body.email;
@@ -127,13 +170,19 @@ async function update_alltfa_true(req, res) {
     await db.User.update({ tfa_allow: true }, { where: { tfa_allow: false } });
     return res.status(200).send('success')
 }
+async function update_alletfa_false(req, res) {
+    await db.User.update({ etfa_allow: false }, { where: { etfa_allow: true } });
+    return res.status(200).send('success')
+}
+async function update_alletfa_true(req, res) {
+    await db.User.update({ etfa_allow: true }, { where: { etfa_allow: false } });
+    return res.status(200).send('success')
+}
 
 async function _delete(id) {
     const user = await getUser(id);
     await user.destroy();
 }
-
-// helper functions
 
 async function getUser(id) {
     const user = await db.User.findByPk(id);
@@ -198,7 +247,6 @@ async function forgot_password(req, res) {
 
     const sendEmail = async () => {
         try {
-            // console.log(url, secret, token, emailTemplate)
             const info = await sgMail.send(emailTemplate);
             // const info = await transporter.sendMail(emailTemplate);
             console.log("email sent", emailTemplate);
