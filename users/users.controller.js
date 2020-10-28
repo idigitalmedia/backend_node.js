@@ -6,8 +6,7 @@ const authorize = require('_middleware/authorize')
 const userService = require('./user.service');
 const tfaservice = require('./tfaservice');
 
-// routes
-router.post('/authenticate', authenticateSchema, authenticate); 
+router.post('/authenticate', authenticateSchema, authenticate);
 router.post('/register', registerSchema, register);
 router.get('/', authorize(), getAll);
 router.get('/current', authorize(), getCurrent);
@@ -92,12 +91,6 @@ function updateSchema(req, res, next) {
 
 function update(req, res, next) {
     userService.update(req.params.id, req.body)
-        .then(user => res.json(user))
-        .catch(next);
-}
-
-function update_tfa(req, res, next) {
-    userService.update_tfa(req.body)
         .then(user => res.json(user))
         .catch(next);
 }

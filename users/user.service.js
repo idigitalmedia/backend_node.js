@@ -2,9 +2,6 @@
 const bcrypt = require('bcryptjs');
 const db = require('_helpers/db');
 const jwt = require("jsonwebtoken");
-const express = require("express");
-const Joi = require("joi");
-const PasswordComplexity = require("joi-password-complexity");
 const _ = require("lodash");
 const nodemailer = require("nodemailer");
 const sgMail = require("@sendgrid/mail");
@@ -25,9 +22,10 @@ module.exports = {
     update_alletfa_true,
     pinSave,
     sendCode,
-    verifyCode
+    verifyCode,
 };
 let r;
+
 async function sendCode(req, res) {
     let username = req.params.username
     r = Math.random().toString(36).substring(7);
@@ -80,10 +78,8 @@ async function authenticate({ username, password }) {
     if (!user || !(await bcrypt.compare(password, user.hash)))
         throw 'Username or password is incorrect';
 
-    // authentication successful
-
     const token = jwt.sign({ sub: user.id }, config.secret, { expiresIn: '7d' });
-    // tfa_authenticate()
+
     return { ...omitHash(user.get()), token };
 }
 

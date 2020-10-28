@@ -13,6 +13,8 @@ var routes = require('./users/todoListRoutes');
 routes(app);
 // api routes
 app.use('/users', require('./users/users.controller'));
+app.use('/coins', require('./coins/coins.controller'));
+app.use('/positions', require('./position/positions.controller'));
 // global error handler
 app.use(errorHandler);
 // app.use(tfa);

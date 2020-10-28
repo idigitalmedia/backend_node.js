@@ -4,8 +4,7 @@ module.exports = model;
 
 function model(sequelize) {
     const attributes = {
-        tfa_allow: {type: DataTypes.BOOLEAN},
+        position_price: {type: DataTypes.FLOAT},
     };
-
     return sequelize.define('Admin', attributes);
 }
