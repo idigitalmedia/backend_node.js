@@ -44,8 +44,9 @@ async function withdrawCoin(req, res) {
     // withdrawal; we specify the PIN here
     var block_io;
     var address;
-    const price_perposition = await positionService._getPositionPrice();
+    var price_perposition = await positionService._getPositionPrice();
     const { amounts, id, cointype } = req.body
+    console.log(price_perposition.btc_price);
     switch (cointype) {
         case 'btc':
             block_io = btc_block_io;
@@ -63,7 +64,7 @@ async function withdrawCoin(req, res) {
             price_perposition = price_perposition.ltc_price;
             break;
     }
-
+    console.log('amount', price_perposition,amounts)
     let withdraw = await block_io.withdraw({
         pin: '2Wsxzaq16599X',
         from_labels: 'default',
