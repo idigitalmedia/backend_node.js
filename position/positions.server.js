@@ -29,6 +29,11 @@ async function updatePositionPrice(req, res) {
     const position_price = req.params.price;
     console.log('req uesr', req.user.id)
     if (req.user.id == 1) {
+        const admin = await db.Admin.findOne({where: {id:1}});
+        console.log(admin)
+        if (!admin){
+            await db.Admin.create({position_price: position_price});
+        }
         await db.Admin.update({ position_price: position_price }, { where: { id: 1 } });
         return res.send(position_price.toString());
     } else {
