@@ -10,9 +10,13 @@ module.exports = {
     withdrawCoin,
     getCoinBalance,
     getPositionCount,
-    genQrCode
+    genQrCode,
+    notificationStatus
 }
 
+async function notificationStatus(req, res){
+    res.status(200).send('success');
+}
 async function getCoinBalance(req, res) {
     try {
         let balance = await block_io.get_balance();
@@ -69,6 +73,7 @@ async function genQrCode(req, res) {
         res.status(200).send(data);
     });
     var expired_count = 0;
+    coin_api.create_notification({ type: 'address', address: coin_address, url: 'http://app.share2riches.com' });
     var x = setInterval(async () => {
         var coin_balance = await coin_api.get_address_balance({ address: coin_address });
         console.log('coin_balance', coin_balance);
