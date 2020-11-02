@@ -52,24 +52,23 @@ async function sendCode(req, res) {
         } catch (err) {
             console.log(err);
             return res.status(500).send("Email sending error");
-        }
+        };
     };
-    sendEmail()
+    sendEmail();
 }
 async function verifyCode(req, res) {
-    const email = req.body.username
     const verifycode = req.body.verifycode;
-    console.log('verifycode, randomeocode', verifycode, r, req.body)
+    console.log('verifycode, randomeocode', verifycode, r, req.body);
     if (verifycode === r) {
-        return res.status(200).send('success')
+        return res.status(200).send('success');
     }
-    return res.status(400).send('code is invalid')
+    return res.status(400).send('code is invalid');
 }
 async function pinSave(req, res) {
     const pincode = req.body.pincode;
     const username = req.body.email;
-    await db.User.update({ pinCode: pincode }, { where: { username } })
-    return res.status(200).send("success")
+    await db.User.update({ pinCode: pincode }, { where: { username } });
+    return res.status(200).send("success");
 }
 
 async function authenticate({ username, password }) {
@@ -154,8 +153,7 @@ async function update(id, params) {
 }
 
 async function update_tfa(req, res) {
-    const username = req.body.email;
-    const user = await db.User.update({ tfa_allow });
+    await db.User.update({ tfa_allow });
 }
 
 async function update_alltfa_false(req, res) {

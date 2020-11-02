@@ -23,6 +23,7 @@ function setup(req, res) {
         issuer: 'NarenAuth v0.0',
         encoding: 'base32'
     });
+    console.log('url',url)
     QRCode.toDataURL(url, async (err, dataURL) => {
   
         // commons.userObject.tfa = {
@@ -31,6 +32,7 @@ function setup(req, res) {
         //     dataURL,
         //     tfaURL: url
         // };
+        console.log(dataURL);
   
         const tfa = await db.User.update({
             secret: '',

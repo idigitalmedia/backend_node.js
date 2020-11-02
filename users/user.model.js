@@ -17,7 +17,7 @@ function model(sequelize) {
         etfa_allow : {type: DataTypes.BOOLEAN},
         pinCode: {type: DataTypes.INTEGER},
         verifycode:{ type: DataTypes.STRING, allowNull: true },
-        position_count: {type: DataTypes.INTEGER}
+        position_count: {type: DataTypes.INTEGER},
     };
 
     const options = {
