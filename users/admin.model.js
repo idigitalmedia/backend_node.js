@@ -20,6 +20,11 @@ function model(sequelize) {
             type: DataTypes.FLOAT,
             allowNull: false,
             defaulValue: 0
+        },
+        splite_limites: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaulValue: 10
         }
     };
     return sequelize.define('Admin', attributes);

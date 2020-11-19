@@ -18,6 +18,9 @@ function model(sequelize) {
         rest_funds: {
             type: DataTypes.FLOAT
         },
+        position_counts: {
+            type: DataTypes.INTEGER
+        }
     };
     return sequelize.define('Funds', attributes);
 }

@@ -6,6 +6,7 @@ const authorize = require('_middleware/authorize')
 router.get('/getpositionprice', positionServer.getPositionPrice)
 router.post('/updatepositionprice/:price', authorize(), positionServer.updatePositionPrice)
 router.post('updatespliteamounts', authorize(), positionServer.updateSpliteAmounts)
+router.post('updatesplitelimits', authorize(), positionServer.updateSpliteLimites)
 router.get('getspliteamounts', positionServer.getSpliteAmounts)
 
 module.exports = router;

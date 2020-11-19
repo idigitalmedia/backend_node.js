@@ -6,11 +6,34 @@ module.exports = {
     getPositionPrice,
     updatePositionPrice,
     updateSpliteAmounts,
-    getSpliteAmounts
+    getSpliteAmounts,
+    updateSpliteLimites
 }
 
+async function updateSpliteLimites(req, res) {
+    console.log('req uesr for update splite amounts', req.user.id);
+    const {splite_limits} = req.body;
+    if (req.user.id == 1) {
+        const admin = await db.Admin.findOne({
+            where: {
+                id: 1
+            }
+        });
+        await db.Admin.update({
+            splite_limites: splite_limits,
+        }, {
+            where: {
+                id: 1
+            }
+        });
+        return res.status(200).send(admin);
+    } else {
+        return res.status(400).send('update failed');
+    }
+}
 async function updateSpliteAmounts(req, res) {
     console.log('req uesr for update splite amounts', req.user.id);
+    const { to_admin, to_affiliates } = req.body;
     if (req.user.id == 1) {
         const admin = await db.Admin.findOne({
             where: {

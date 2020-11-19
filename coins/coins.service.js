@@ -26,23 +26,23 @@ async function getPaymentStatus(req, res) {
             user_id: user_id
         }
     });
-  
+
     if (positionInfo != undefined) {
         res.status(200).send(positionInfo);
         return;
     }
-  
+
     res.status(400).send('Payment not paid');
-} 
+}
 async function notificationStatus(req, res) {
     var confirmed_number;
     var coin_api;
-  
+
     res.status(200).send('success');
     console.log('notification data', req.body.data);
-  
+
     if (req.body.data) {
-  
+
         const {
             network,
             address,
@@ -51,7 +51,7 @@ async function notificationStatus(req, res) {
             txid,
             confirmations
         } = req.body.data;
-  
+
         switch (network) {
             case 'BTC':
                 coin_api = btc_block_io;
@@ -68,7 +68,7 @@ async function notificationStatus(req, res) {
                 coin_address: address
             }
         });
-  
+
         if (balance_change != 0 && confirmations == 0) {
             await db.Position.create({
                 user_id: positionInfo.user_id,
@@ -156,10 +156,18 @@ async function notificationStatus(req, res) {
                         }
                     });
                     var funds = positionInfo.position_count * positionprice.position_price;
+                    for (var i = 1; i <= positionInfo.position_count; i++) {
+                        await ApprovedPositionFunds.create({
+                            user_id: positionInfo.user_id,
+                            funds: positionprice.position_price * ((100 - positionInfo.to_admin - positionInfo.to_affiliates)/100)          
+                        })
+                    }
                     await db.Funds.create({
                         user_id: positionInfo.user_id,
-                        admin_funds: funds * positionInfo.to_admin,
-                        affiliates_funds: funds * positionInfo.to_affiliates,
+                        admin_funds: funds * (positionInfo.to_admin / 100),
+                        affiliates_funds: funds * (positionInfo.to_affiliates / 100),
+                        rest_funds: funds * (1 - (positionInfo.to_admin / 100) - (positionInfo.to_affiliates / 100)),
+                        position_counts: positionInfo.position_count
                     });
                 }
             }
