@@ -19,6 +19,9 @@ async function initialize() {
     db.User = require('../users/user.model')(sequelize);
     db.Admin = require('../users/admin.model')(sequelize);
     db.Position = require('../users/position.model')(sequelize);
+    db.BuyPosition = require('../position/buyposition.model')(sequelize);
+    db.PositionPaymentHistory = require('../position/buyposition_history.model')(sequelize);
+    db.Funds = require('../users/funds.model')(sequelize);
 
     // sync all models with database
     await sequelize.sync();
